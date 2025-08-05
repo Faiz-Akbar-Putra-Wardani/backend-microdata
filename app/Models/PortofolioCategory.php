@@ -10,7 +10,7 @@ class PortofolioCategory extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'image',
+        'slug',
     ];
 
     public function portofolios()

@@ -9,9 +9,13 @@ class Portofolio extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
+        'title',
+        'name_project',
         'description',
         'image',
+        'image_portofolio',
+        'company_name',
         'category_id',
     ];
 }
+// tambahkan link project

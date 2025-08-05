@@ -19,6 +19,12 @@ class CareerController extends Controller
     {
         try {
             $careers = Career::orderBy('created_at', 'desc')->get();
+
+            $careers->transform(function ($career) {
+                $career->image_url = $career->image ? asset('storage/' . $career->image) : null;
+                return $career;
+            });
+
             return $this->successResponse($careers, 'Careers retrieved successfully.', 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve careers.', 500);
@@ -62,6 +68,8 @@ class CareerController extends Controller
     {
         try {
             $career = Career::findOrFail($id);
+            $career->image_url = $career->image ? asset('storage/' . $career->image) : null;
+            
             return $this->successResponse($career, 'Career retrieved successfully.', 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve career.', 500);
@@ -85,7 +93,10 @@ class CareerController extends Controller
             $updatedCareer = DB::transaction(function () use ($request, $career) {
                 $validated = $request->validated();
 
-                if ($request->hasFile('image')) {
+                if($request->hasFile('image')) {
+                    if ($career->image && Storage::disk('public')->exists($career->image)) {
+                        Storage::disk('public')->delete($career->image);
+                    }
                     $imagePath = $request->file('image')->store('images', 'public');
                     $validated['image'] = $imagePath;
                 } else {

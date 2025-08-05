@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Portofolio;
+use App\Models\Position;
 use Illuminate\Http\Request;
 
-class PortofolioController extends Controller
+class PositionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        
+        //
     }
 
     /**
@@ -34,7 +34,7 @@ class PortofolioController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Portofolio $portofolio)
+    public function show(Position $position)
     {
         //
     }
@@ -42,7 +42,7 @@ class PortofolioController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Portofolio $portofolio)
+    public function edit(Position $position)
     {
         //
     }
@@ -50,7 +50,7 @@ class PortofolioController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Portofolio $portofolio)
+    public function update(Request $request, Position $position)
     {
         //
     }
@@ -58,7 +58,7 @@ class PortofolioController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Portofolio $portofolio)
+    public function destroy(Position $position)
     {
         //
     }

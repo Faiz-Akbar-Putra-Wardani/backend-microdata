@@ -86,6 +86,9 @@ class ServiceController extends Controller
             $validated = $request->validated();
 
             if ($request->hasFile('icon')) {
+                if ($service->icon && Storage::disk('public')->exists($service->icon)) {
+                    Storage::disk('public')->delete($service->icon);
+                }
                 $iconPath = $request->file('icon')->store('icons', 'public');
                 $validated['icon'] = $iconPath;
             } else {

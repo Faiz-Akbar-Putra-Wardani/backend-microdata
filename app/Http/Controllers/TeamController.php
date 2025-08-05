@@ -15,10 +15,16 @@ use Illuminate\Support\Facades\Storage;
 class TeamController extends Controller
 {
     use ApiResponse;
+
     public function index(): JsonResponse
     {
         try {
             $teams = Team::orderBy('created_at', 'desc')->get();
+
+            $teams->transform(function ($team) {
+                $team->photo_url = $team->photo ? asset('storage/' . $team->photo) : null;
+                return $team;
+            });
 
             return $this->successResponse($teams, 'Teams retrieved successfully.', 200);
         } catch (\Exception $e) {
@@ -26,61 +32,48 @@ class TeamController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        
+        //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreTeamRequest $request): JsonResponse
     {
         try {
-        $newTeam = DB::transaction(function () use ($request) {
-            $validated = $request->validated();
+            $newTeam = DB::transaction(function () use ($request) {
+                $validated = $request->validated();
 
-            if ($request->hasFile('photo')) {
-                $photoPath = $request->file('photo')->store('photos', 'public');
-                $validated['photo'] = $photoPath;
-            }
-            return Team::create($validated);
-        });
+                if ($request->hasFile('photo')) {
+                    $photoPath = $request->file('photo')->store('photos', 'public');
+                    $validated['photo'] = $photoPath;
+                }
 
-        return $this->successResponse($newTeam, 'Team created successfully.', 201);
+                return Team::create($validated);
+            });
 
-    } catch (\Exception $e) {
-        return $this->errorResponse( 'Failed to create team.', 500);
+            return $this->successResponse($newTeam, 'Team created successfully.', 201);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to create team.', 500);
+        }
     }
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id) : JsonResponse
+    public function show($id): JsonResponse
     {
         try {
             $team = Team::findOrFail($id);
+            $team->photo_url = $team->photo ? asset('storage/' . $team->photo) : null;
+
             return $this->successResponse($team, 'Team retrieved successfully.');
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve team.', 500);
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Team $team)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdatedTeamRequest $request, Team $team): JsonResponse
     {
         try {
@@ -88,6 +81,10 @@ class TeamController extends Controller
                 $validated = $request->validated();
 
                 if ($request->hasFile('photo')) {
+                    if ($team->photo && Storage::disk('public')->exists($team->photo)) {
+                        Storage::disk('public')->delete($team->photo);
+                    }
+
                     $photoPath = $request->file('photo')->store('photos', 'public');
                     $validated['photo'] = $photoPath;
                 } else {
@@ -104,20 +101,17 @@ class TeamController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Team $team): JsonResponse
     {
         try {
-            DB::transaction(function () use ($team){
-                if ($team->photo && Storage::disk('public')->exists($team->photo)){
+            DB::transaction(function () use ($team) {
+                if ($team->photo && Storage::disk('public')->exists($team->photo)) {
                     Storage::disk('public')->delete($team->photo);
                 }
                 $team->delete();
             });
-            return $this->successResponse($team, 'Team deleted successfully.', 200);
 
+            return $this->successResponse($team, 'Team deleted successfully.', 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to delete team.', 500);
         }

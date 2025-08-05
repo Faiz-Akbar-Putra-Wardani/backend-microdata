@@ -5,11 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Technology extends Model
+class BusinessLine extends Model
 {
-    use HasFactory;
+    Use HasFactory;
 
     protected $fillable = [
-        'image',
+        'title',
+        'icon',
+        'title_business',
+        'description',
     ];
 }
+
+// tambahkan link

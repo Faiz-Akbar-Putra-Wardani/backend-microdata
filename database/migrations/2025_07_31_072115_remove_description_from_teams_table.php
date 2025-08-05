@@ -9,19 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+   public function up(): void
     {
-        Schema::create('technologies', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('image');
-            $table->timestamps();
+        Schema::table('teams', function (Blueprint $table) {
+            $table->dropColumn('description');
         });
     }
 
-    
     public function down(): void
     {
-        Schema::dropIfExists('technologies');
+        Schema::table('teams', function (Blueprint $table) {
+            $table->text('description')->nullable(); 
+        });
     }
 };

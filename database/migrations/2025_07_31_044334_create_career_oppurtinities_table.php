@@ -11,17 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('technologies', function (Blueprint $table) {
+        Schema::create('career_oppurtinities', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('title');
             $table->string('image');
+            $table->text('description');
+            $table->string('requirements');
             $table->timestamps();
         });
     }
 
-    
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('technologies');
+        Schema::dropIfExists('career_oppurtinities');
     }
 };

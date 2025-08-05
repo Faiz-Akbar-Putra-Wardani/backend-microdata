@@ -29,7 +29,7 @@ class UserController extends Controller
             ]);
         }
 
-        $token = $user->createToken('admin-token')->plainTextToken;
+        $token = $user->createToken('authToken')->plainTextToken;
 
         return $this->successResponse([
             'user' => [
@@ -59,7 +59,7 @@ class UserController extends Controller
             'password' => Hash::make($validatedData['password']),
         ]);
 
-        $token = $user->createToken('admin-token')->plainTextToken;
+        $token = $user->createToken('authToken')->plainTextToken;
 
         return $this->successResponse([
             'user' => [

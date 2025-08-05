@@ -3,11 +3,10 @@
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdatedTechnologyRequest extends FormRequest
+class UpdatedCareerOpportunitiesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,16 +24,21 @@ class UpdatedTechnologyRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'title' => 'sometimes|string|max:255',
             'image' => 'sometimes|image|mimes:jpeg,png,jpg',
+            'description' => 'sometimes|string',
+            'requirements' => 'sometimes|string',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'image.sometimes' => 'The image field is optional but must be an image if provided.',
-            'image.image' => 'The image must be an image file.',
+            'title.sometimes' => 'The title field is optional but must be a string if provided.',
+            'image.sometimes' => 'The image field is optional but must be a valid image file if provided.',
             'image.mimes' => 'The image must be a file of type: jpeg, png, jpg.',
+            'description.sometimes' => 'The description field is optional but must be a string if provided.',
+            'requirements.sometimes' => 'The requirements field is optional but must be a string if provided.',
         ];
     }
 
