@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 class MicrodataOptionController extends Controller
 {
     Use ApiResponse;
-    public function index()
+    public function index(): JsonResponse
     {
         try {
             $microdataOptions = MicrodataOption::orderByDesc('created_at', 'desc')->get();
@@ -28,7 +28,7 @@ class MicrodataOptionController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**

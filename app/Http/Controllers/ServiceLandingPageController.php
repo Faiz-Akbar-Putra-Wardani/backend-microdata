@@ -36,7 +36,7 @@ class ServiceLandingPageController extends Controller
      */
     public function show(ServiceLandingPage $serviceLandingPage)
     {
-        //
+        
     }
 
     /**

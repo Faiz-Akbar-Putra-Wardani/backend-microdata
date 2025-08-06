@@ -62,6 +62,7 @@ class AboutUsController extends Controller
         } catch (\Exception $e) {
             return $this->errorResponse('About Us not found.', 404);
         }
+        
     }
 
     /**
@@ -75,33 +76,38 @@ class AboutUsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatedAboutUsRequest $request, AboutUs $aboutUs) : JsonResponse
-    {
-        try {
-            $updatedAboutUs = DB::transaction(function () use ($request, $aboutUs) {
-                $validated = $request->validated();
-                $aboutUs->update($validated);
-                return $aboutUs;
-            });
+    public function update(UpdatedAboutUsRequest $request, $id): JsonResponse
+{
+    try {
+        $updatedAboutUs = DB::transaction(function () use ($request, $id) {
+            $validated = $request->validated();
+            $aboutUs = AboutUs::findOrFail($id); 
+            $aboutUs->update($validated);
+            return $aboutUs;
+        });
 
-            return $this->successResponse($updatedAboutUs, 'About Us updated successfully.', 200);
-        } catch (\Exception $e) {
-            return $this->errorResponse('Failed to update About Us.', 500);
-        }
+        return $this->successResponse($updatedAboutUs, 'About Us updated successfully.', 200);
+    } catch (\Exception $e) {
+        return $this->errorResponse('Failed to update About Us: ' . $e->getMessage(), 500);
     }
+}
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(AboutUs $aboutUs) : JsonResponse
+    public function destroy($id): JsonResponse
     {
         try {
-            DB::transaction(function () use ($aboutUs) {
-                $aboutUs->delete();
+            $deleted = DB::transaction(function () use ($id) {
+                $aboutUs = AboutUs::findOrFail($id);
+                return $aboutUs->delete();
             });
-            return $this->successResponse($aboutUs, 'About Us deleted successfully.', 204);
+
+            return $this->successResponse($id, 'About Us deleted successfully.', 200);
         } catch (\Exception $e) {
-            return $this->errorResponse('Failed to delete About Us.', 500);
+            return $this->errorResponse('Failed to delete About Us: ' . $e->getMessage(), 500);
         }
     }
+
 }

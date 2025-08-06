@@ -30,7 +30,7 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -124,4 +124,5 @@ class ServiceController extends Controller
            return $this->errorResponse('Failed to delete service.', 500);
        }
    }
+   
 }

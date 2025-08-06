@@ -2,17 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePositionRequest;
+use App\Http\Requests\UpdatedPositionRequest;
 use App\Models\Position;
+use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class PositionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    Use ApiResponse;
+    public function index(): JsonResponse
     {
-        //
+        try {
+            $positions = Position::orderByDesc('created_at', 'desc')->get();
+            return $this->successResponse($positions);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage());
+        }
     }
 
     /**
@@ -26,17 +34,31 @@ class PositionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePositionRequest $request): JsonResponse
     {
-        //
+        try {
+            $newPositions = DB::transaction(function () use ($request) {
+                $validated = $request->validated();
+
+                return Position::created($validated);
+            });
+            return $this->successResponse('Position created successfully.', 201);
+        } catch (\Exception $e) {
+             return $this->errorResponse('Failed to create position.', 500);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Position $position)
+    public function show($id): JsonResponse
     {
-        //
+        try {
+            $position = Position::findOrFail($id);
+            return $this->successResponse($position, 'Position retrieved successfully.', 200);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to retrieve Position.', 500);
+        }
     }
 
     /**
@@ -50,16 +72,33 @@ class PositionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Position $position)
+    public function update(UpdatedPositionRequest $request, Position $position): JsonResponse
     {
-        //
+        try {
+            $updatedPositions = DB::transaction(function () use ($request, $position) {
+                $validated = $request->validated();
+
+                $position->update($validated);
+                return $position;
+            });
+            return $this->successResponse('Position updated successfully.', 200);
+        } catch(\Exception $e) {
+            return $this->errorResponse('Failed to updated Position', 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Position $position)
+    public function destroy(Position $position): JsonResponse
     {
-        //
+        try {
+            DB::transaction(function () use ($position){
+                $position->delete();
+            });
+            return $this->successResponse($position, 'Position deleted successfully.', 200);
+        } catch(\Exception $e) {
+            return $this->errorResponse('Failed to deleted Position', 500);
+        }
     }
 }

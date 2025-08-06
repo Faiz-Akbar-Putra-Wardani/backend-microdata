@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\BusinessLineController;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\MicrodataOptionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\TeamController;
@@ -8,6 +10,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TechnologyController;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\CareerOppurtinitiesController;
+use App\Http\Controllers\PositionController;
 use App\Http\Controllers\UserController;
 
 Route::post('/login', [UserController::class, 'login']);
@@ -34,14 +37,28 @@ Route::get('/career-opportunities/{id}', [CareerOppurtinitiesController::class, 
 Route::get('/business-lines', [BusinessLineController::class, 'index']);
 Route::get('/business-lines/{id}', [BusinessLineController::class, 'show']);
 
+Route::get('/clients', [ClientController::class, 'index']);
+Route::get('/clients/{id}', [ClientController::class, 'show']);
+
+Route::get('/microdata-options', [MicrodataOptionController::class, 'index']);
+Route::get('/microdata-options/{id}', [MicrodataOptionController::class, 'show']);
+
+Route::get('/positions', [PositionController::class, 'index']);
+Route::get('/positions', [PositionController::class, 'show']);
+
+
 Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::get('/user', [UserController::class, 'user']);
     Route::post('/logout', [UserController::class, 'logout']);
-    Route::apiResource('teams', TeamController::class)->except(['index', 'show']);
-    Route::apiResource('services', ServiceController::class)->except(['index', 'show']);
-    Route::apiResource('technologies', TechnologyController::class)->except(['index', 'show']);
-    Route::apiResource('careers', CareerController::class)->except(['index', 'show']);
-    Route::apiResource('about-us', AboutUsController::class)->except(['index', 'show']);
-    Route::apiResource('career-opportunities', CareerOppurtinitiesController::class)->except(['index', 'show']);
-    Route::apiResource('business-lines', BusinessLineController::class)->except(['index', 'show']);
+    Route::apiResource('teams', TeamController::class);
+    Route::apiResource('services', ServiceController::class);
+    Route::apiResource('technologies', TechnologyController::class);
+    Route::apiResource('careers', CareerController::class);
+    Route::apiResource('about-us', AboutUsController::class);
+    Route::apiResource('career-opportunities', CareerOppurtinitiesController::class);
+    Route::apiResource('business-lines', BusinessLineController::class);
+    Route::apiResource('clients', ClientController::class);
+    Route::apiResource('microdata-options', MicrodataOptionController::class);
+    Route::apiResource('positions', PositionController::class);
+
 });

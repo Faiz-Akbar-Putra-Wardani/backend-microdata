@@ -18,6 +18,7 @@ class TechnologyController extends Controller
     {
         try {
             $technologies = Technology::orderBy('created_at', 'desc')->get();
+            
             return $this->successResponse($technologies, 'Technologies retrieved successfully.', 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve technologies.', 500);
