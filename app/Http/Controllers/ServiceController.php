@@ -19,6 +19,10 @@ class ServiceController extends Controller
     {
         try {
             $services = Service::orderBy('created_at', 'desc')->get();
+             $services->transform(function ($service) {
+                $service->icon_url = $service->icon ? asset('storage/' . $service->icon) : null;
+                return $service;
+            });
             return $this->successResponse($services, 'Services retrieved successfully.', 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve services.', 500);
@@ -62,6 +66,8 @@ class ServiceController extends Controller
     {
         try {
             $service = Service::findOrFail($id);
+             $service->icon_url = $service->icon ? asset('storage/' . $service->icon) : null; $service->icon_url = $service->icon ? asset('storage/' . $service->icon) : null;
+
             return $this->successResponse($service, 'Service retrieved successfully.', 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve service.', 500);
