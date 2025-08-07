@@ -44,7 +44,7 @@ Route::get('/microdata-options', [MicrodataOptionController::class, 'index']);
 Route::get('/microdata-options/{id}', [MicrodataOptionController::class, 'show']);
 
 Route::get('/positions', [PositionController::class, 'index']);
-Route::get('/positions', [PositionController::class, 'show']);
+Route::get('/positions/{id}', [PositionController::class, 'show']);
 
 
 Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
