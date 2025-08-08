@@ -17,5 +17,10 @@ class Portofolio extends Model
         'company_name',
         'category_id',
     ];
+
+     public function category()
+    {
+        return $this->belongsTo(PortofolioCategory::class, 'portfolio_category_id');
+    }
 }
 // tambahkan link project
