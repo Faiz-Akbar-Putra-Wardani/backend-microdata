@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StorePortofolioRequest extends FormRequest
+class UpdatePortofolioRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,36 +24,33 @@ class StorePortofolioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
-            'name_project' => 'required|string|max:255',
-            'description' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'image_portofolio' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'company_name' => 'required|string|max:255',
-            'category_id' => 'required|exists:portfolio_categories,id',
+            'title' => 'sometimes|string|max:255',
+            'name_project' => 'sometimes|string|max:255',
+            'description' => 'sometimes|string',
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
+            'image_portofolio' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
+            'company_name' => 'sometimes|string|max:255',
+            'category_id' => 'sometimes|exists:portfolio_categories,id',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'title.required' => 'The title field is required.',
-            'name_project.required' => 'The project name field is required.',
-            'description.required' => 'The description field is required.',
+            'title.string' => 'The title must be a string.',
+            'name_project.string' => 'The project name must be a string.',
+            'description.string' => 'The description must be a string.',
 
-            'image.required' => 'The image field is required.',
             'image.image' => 'The image must be an image.',
             'image.mimes' => 'The image must be a file of type: jpeg, png, jpg.',
             'image.max' => 'The image size may not be greater than 2MB.',
 
-            'image_portofolio.required' => 'The portfolio image field is required.',
             'image_portofolio.image' => 'The portfolio image must be an image.',
             'image_portofolio.mimes' => 'The portfolio image must be a file of type: jpeg, png, jpg.',
             'image_portofolio.max' => 'The portfolio image size may not be greater than 2MB.',
 
-            'company_name.required' => 'The company name field is required.',
+            'company_name.string' => 'The company name must be a string.',
 
-            'category_id.required' => 'The category field is required.',
             'category_id.exists' => 'The selected category is invalid.',
         ];
     }
