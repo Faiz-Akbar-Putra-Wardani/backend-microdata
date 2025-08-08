@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdatedPortofolioCategoryRequest extends FormRequest
+class StorePartnershipRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,18 +24,20 @@ class UpdatedPortofolioCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|string|max:255',
+            'logo' => 'required|image|mimes:jpeg,png,jpg',
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
-            'name.sometimes' => 'The name field is optional but must be a string if provided.',
+            'logo.required' => 'Logo is required.',
+            'logo.image' => 'Logo must be an image.',
+            'logo.mimes' => 'Logo must be a JPEG, PNG, or JPG image.',
         ];
-    } 
+    }
 
-      protected function failedValidation(Validator $validator)
+    protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(
             response()->json([
@@ -45,5 +47,4 @@ class UpdatedPortofolioCategoryRequest extends FormRequest
             ], 422)
         );
     }
-
 }

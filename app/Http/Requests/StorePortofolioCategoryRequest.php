@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StorePortofolioCategoryRequest extends FormRequest
 {
@@ -25,4 +27,24 @@ class StorePortofolioCategoryRequest extends FormRequest
             'name' => 'required|string|max:255',
         ];
     }
+
+    public function messages()
+    {
+        return [
+             'name.required' => 'The name field is required.',
+        ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(
+            response()->json([
+                'success' => false,
+                'message' => 'Validation Error',
+                'errors' => $validator->errors()
+            ], 422)
+        );
+    }
+
+
 }

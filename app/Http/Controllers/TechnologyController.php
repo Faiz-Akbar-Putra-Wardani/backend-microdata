@@ -18,6 +18,12 @@ class TechnologyController extends Controller
     {
         try {
             $technologies = Technology::orderBy('created_at', 'desc')->get();
+
+            $technologies->transform(function ($technologies) {
+            $technologies->logo_url = $technologies->logo ? asset('storage/' . $technologies->logo) : null;
+                return $technologies;
+            });
+            
             
             return $this->successResponse($technologies, 'Technologies retrieved successfully.', 200);
         } catch (\Exception $e) {
@@ -49,6 +55,7 @@ class TechnologyController extends Controller
     {
         try {
             $technology = Technology::findOrFail($id);
+             $technology->logo_url = $technology->logo ? asset('storage/' . $technology->logo) : null;
             return $this->successResponse($technology, 'Technology retrieved successfully.', 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve technology.', 500);
