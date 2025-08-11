@@ -84,38 +84,43 @@ class CareerOppurtinitiesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatedCareerOpportunitiesRequest $request, CareerOppurtinities $careerOppurtinities) : JsonResponse
-    {
-        try {
-            $updatedCareerOpportunity = DB::transaction(function () use ($request, $careerOppurtinities) {
-                $validated = $request->validated();
+    public function update(UpdatedCareerOpportunitiesRequest $request, $id): JsonResponse
+{
+    try {
+        $careerOpportunity = CareerOppurtinities::findOrFail($id);
 
-                if ($request->hasFile('image')) {
-                     if ($careerOppurtinities->image && Storage::disk('public')->exists($careerOppurtinities->image)) {
-                        Storage::disk('public')->delete($careerOppurtinities->image);
-                    }
-                    $imagePath = $request->file('image')->store('images', 'public');
-                    $validated['image'] = $imagePath;
-                } else {
-                    unset($validated['image']);
+        $updatedCareerOpportunity = DB::transaction(function () use ($request, $careerOpportunity) {
+            $validated = $request->validated();
+
+            if ($request->hasFile('image')) {
+                if ($careerOpportunity->image && Storage::disk('public')->exists($careerOpportunity->image)) {
+                    Storage::disk('public')->delete($careerOpportunity->image);
                 }
+                $imagePath = $request->file('image')->store('images', 'public');
+                $validated['image'] = $imagePath;
+            } else {
+                unset($validated['image']);
+            }
 
-                $careerOppurtinities->update($validated);
-                return $careerOppurtinities;
-            });
+            $careerOpportunity->update($validated);
+            return $careerOpportunity;
+        });
 
-            return $this->successResponse($updatedCareerOpportunity);
-        } catch (\Exception $e) {
-            return $this->errorResponse('Failed to update career opportunity.', 500);
-        }
+        return $this->successResponse($updatedCareerOpportunity);
+    } catch (\Exception $e) {
+        return $this->errorResponse('Failed to update career opportunity.', 500);
     }
+}
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CareerOppurtinities $careerOppurtinities)
+    public function destroy(CareerOppurtinities $id): JsonResponse
     {
         try {
+            $careerOppurtinities = CareerOppurtinities::withTrashed()->findOrFail($id);
+
             DB::transaction(function () use ($careerOppurtinities) {
                 if ($careerOppurtinities->image && Storage::disk('public')->exists($careerOppurtinities->image)) {
                     Storage::disk('public')->delete($careerOppurtinities->image);
