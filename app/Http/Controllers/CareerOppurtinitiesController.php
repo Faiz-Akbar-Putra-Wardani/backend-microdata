@@ -116,22 +116,23 @@ class CareerOppurtinitiesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CareerOppurtinities $id): JsonResponse
-    {
-        try {
-            $careerOppurtinities = CareerOppurtinities::withTrashed()->findOrFail($id);
+public function destroy($id): JsonResponse
+{
+    try {
+        $careerOpportunity = CareerOppurtinities::findOrFail($id);
 
-            DB::transaction(function () use ($careerOppurtinities) {
-                if ($careerOppurtinities->image && Storage::disk('public')->exists($careerOppurtinities->image)) {
-                    Storage::disk('public')->delete($careerOppurtinities->image);
-                }
-                  $careerOppurtinities = CareerOppurtinities::findOrFail($careerOppurtinities->id);
-                $careerOppurtinities->delete();
-            });
+        DB::transaction(function () use ($careerOpportunity) {
+            if ($careerOpportunity->image && Storage::disk('public')->exists($careerOpportunity->image)) {
+                Storage::disk('public')->delete($careerOpportunity->image);
+            }
+            $careerOpportunity->delete();
+        });
 
-            return $this->successResponse($careerOppurtinities, 'Career opportunity deleted successfully.', 200);
-        } catch (\Exception $e) {
-            return $this->errorResponse('Failed to delete career opportunity.', 500);
-        }
+        return $this->successResponse(null, 'Career opportunity deleted successfully.', 200);
+    } catch (\Exception $e) {
+        return $this->errorResponse('Failed to delete career opportunity.', 500);
     }
+}
+
+
 }
