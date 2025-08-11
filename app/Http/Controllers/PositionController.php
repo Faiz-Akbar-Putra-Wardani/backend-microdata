@@ -40,7 +40,7 @@ class PositionController extends Controller
             $newPositions = DB::transaction(function () use ($request) {
                 $validated = $request->validated();
 
-                return Position::created($validated);
+                return Position::create($validated);
             });
             return $this->successResponse('Position created successfully.', 201);
         } catch (\Exception $e) {

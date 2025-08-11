@@ -50,7 +50,7 @@ class ProcessController extends Controller
                     $iconPath = $request->file('icon')->store('icons', 'public');
                     $validated['icon'] = $iconPath;
                 }
-                return Process::created($validated);
+                return Process::create($validated);
             });
             return $this->successResponse($newProcess, 'Process created successfully.', 201);
         } catch (\Exception $e){
