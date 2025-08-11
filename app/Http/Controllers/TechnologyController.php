@@ -54,7 +54,7 @@ class TechnologyController extends Controller
     public function show($id): JsonResponse
     {
         try {
-            $technology = Technology::findOrFail($id);
+             $technology = Technology::findOrFail($id);
              $technology->logo_url = $technology->logo ? asset('storage/' . $technology->logo) : null;
             return $this->successResponse($technology, 'Technology retrieved successfully.', 200);
         } catch (\Exception $e) {

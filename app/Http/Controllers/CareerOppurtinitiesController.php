@@ -120,6 +120,7 @@ class CareerOppurtinitiesController extends Controller
                 if ($careerOppurtinities->image && Storage::disk('public')->exists($careerOppurtinities->image)) {
                     Storage::disk('public')->delete($careerOppurtinities->image);
                 }
+                  $careerOppurtinities = CareerOppurtinities::findOrFail($careerOppurtinities->id);
                 $careerOppurtinities->delete();
             });
 
