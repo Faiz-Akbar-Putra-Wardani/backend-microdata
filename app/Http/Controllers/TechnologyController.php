@@ -20,7 +20,8 @@ class TechnologyController extends Controller
             $technologies = Technology::orderBy('created_at', 'desc')->get();
 
             $technologies->transform(function ($technologies) {
-            $technologies->logo_url = $technologies->logo ? asset('storage/' . $technologies->logo) : null;
+            $technologies->image_url = $technologies->image ? asset('storage/' . $technologies->image) : null;
+
                 return $technologies;
             });
             
@@ -34,9 +35,10 @@ class TechnologyController extends Controller
     public function store(StoreTechnologyRequest $request): JsonResponse
     {
         try {
-            $newTechnology = DB::transaction(function () use ($request) {
+            $newTechnologies = DB::transaction(function () use($request){
                 $validated = $request->validated();
 
+                
                 if ($request->hasFile('image')) {
                     $imagePath = $request->file('image')->store('images', 'public');
                     $validated['image'] = $imagePath;
@@ -44,8 +46,7 @@ class TechnologyController extends Controller
 
                 return Technology::create($validated);
             });
-
-            return $this->successResponse($newTechnology, 'Technology created successfully.', 201);
+            return $this->successResponse($newTechnologies, 'Technology created successfully.', 201);
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to create technology.', 500);
         }
@@ -55,7 +56,7 @@ class TechnologyController extends Controller
     {
         try {
              $technology = Technology::findOrFail($id);
-             $technology->logo_url = $technology->logo ? asset('storage/' . $technology->logo) : null;
+             $technology->image_url = $technology->image ? asset('storage/' . $technology->image) : null;
             return $this->successResponse($technology, 'Technology retrieved successfully.', 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve technology.', 500);

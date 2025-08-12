@@ -23,20 +23,24 @@ class StoreTechnologyRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
-        return [
-            'image' => 'required|image|mimes:jpeg,png,jpg',
-        ];
-    }
+{
+    return [
+        'name' => 'required|string|max:255',
+        'image' => 'required|image|mimes:jpeg,png,jpg',
+    ];
+}
 
-    public function messages(): array
-    {
-        return [
-            'image.required' => 'The image field is required.',
-            'image.image' => 'The image must be an image file.',
-            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg.',
-        ];
-    }
+public function messages(): array
+{
+    return [
+        'name.required' => 'The name field is required.',
+        'name.string' => 'The name must be a string.',
+        'name.max' => 'The name may not be greater than 255 characters.',
+        'image.required' => 'The image field is required.',
+        'image.image' => 'The image must be an image file.',
+        'image.mimes' => 'The image must be a file of type: jpeg, png, jpg.',
+    ];
+}
 
     protected function failedValidation(Validator $validator)
     {

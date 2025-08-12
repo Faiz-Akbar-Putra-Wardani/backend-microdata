@@ -38,6 +38,8 @@ class PortofolioCategoryController extends Controller
         try {
             $newCategory = DB::transaction(function () use ($request) {
                 $validated = $request->validated();
+
+                return PortofolioCategory::create($validated);
             });
             return $this->successResponse($newCategory, 'Category created successfully.', 201);
         }
