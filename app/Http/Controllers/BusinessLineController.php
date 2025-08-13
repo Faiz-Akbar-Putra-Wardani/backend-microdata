@@ -98,6 +98,8 @@ class BusinessLineController extends Controller
                     }
                     $iconPath = $request->file('icon')->store('icons', 'public');
                     $validated['icon'] = $iconPath;
+                } else {
+                    unset($validated['icon']);
                 }
 
                 $businessLine->update($validated);
