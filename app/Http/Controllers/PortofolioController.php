@@ -25,7 +25,6 @@ class PortofolioController extends Controller
                 ->get();
 
             $portfolios->transform(function ($portfolio) {
-                $portfolio->image_url = $portfolio->image ? asset('storage/' . $portfolio->image) : null;
                 $portfolio->image_portfolio_url = $portfolio->image_portofolio ? asset('storage/' . $portfolio->image_portofolio) : null;
                 return $portfolio;
             });
@@ -42,9 +41,6 @@ class PortofolioController extends Controller
             $newPortfolio = DB::transaction(function () use ($request) {
                 $validated = $request->validated();
 
-                if ($request->hasFile('image')) {
-                    $validated['image'] = $request->file('image')->store('portfolios', 'public');
-                }
                 if ($request->hasFile('image_portofolio')) {
                     $validated['image_portofolio'] = $request->file('image_portofolio')->store('portfolio_images', 'public');
                 }
@@ -62,7 +58,6 @@ class PortofolioController extends Controller
     {
         try {
             $portfolio = Portofolio::with('category')->findOrFail($id);
-            $portfolio->image_url = $portfolio->image ? asset('storage/' . $portfolio->image) : null;
             $portfolio->image_portfolio_url = $portfolio->image_portofolio ? asset('storage/' . $portfolio->image_portofolio) : null;
 
             return $this->successResponse($portfolio, 'Portfolio retrieved successfully.');
@@ -77,18 +72,13 @@ class PortofolioController extends Controller
             $updatedPortfolio = DB::transaction(function () use ($request, $portfolio) {
                 $validated = $request->validated();
 
-                if ($request->hasFile('image')) {
-                    if ($portfolio->image && Storage::disk('public')->exists($portfolio->image)) {
-                        Storage::disk('public')->delete($portfolio->image);
-                    }
-                    $validated['image'] = $request->file('image')->store('portfolios', 'public');
-                }
-
                 if ($request->hasFile('image_portofolio')) {
                     if ($portfolio->image_portofolio && Storage::disk('public')->exists($portfolio->image_portofolio)) {
                         Storage::disk('public')->delete($portfolio->image_portofolio);
                     }
                     $validated['image_portofolio'] = $request->file('image_portofolio')->store('portfolio_images', 'public');
+                } else {
+                    unset($validated['image']);
                 }
 
                 $portfolio->update($validated);
