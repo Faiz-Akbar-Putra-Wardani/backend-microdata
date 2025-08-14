@@ -26,11 +26,9 @@ class UpdatePortofolioRequest extends FormRequest
         return [
             'title' => 'sometimes|string|max:255',
             'name_project' => 'sometimes|string|max:255',
-            'description' => 'sometimes|string',
-            'image' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
             'image_portofolio' => 'sometimes|image|mimes:jpeg,png,jpg|max:2048',
             'company_name' => 'sometimes|string|max:255',
-            'category_id' => 'sometimes|exists:portfolio_categories,id',
+            'category_id' => 'sometimes|exists:portofolio_categories,id',
         ];
     }
 
@@ -39,11 +37,6 @@ class UpdatePortofolioRequest extends FormRequest
         return [
             'title.string' => 'The title must be a string.',
             'name_project.string' => 'The project name must be a string.',
-            'description.string' => 'The description must be a string.',
-
-            'image.image' => 'The image must be an image.',
-            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg.',
-            'image.max' => 'The image size may not be greater than 2MB.',
 
             'image_portofolio.image' => 'The portfolio image must be an image.',
             'image_portofolio.mimes' => 'The portfolio image must be a file of type: jpeg, png, jpg.',

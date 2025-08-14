@@ -43,8 +43,11 @@ Route::get('/microdata-options/{id}', [MicrodataOptionController::class, 'show']
 Route::get('/partnerships', [PartnershipController::class, 'index']);
 Route::get('/partnerships/{id}', [PartnershipController::class, 'show']);
 
-Route::get('/Portofolio-categories', [PortofolioCategoryController::class, 'index']);
-Route::get('/Portofolio-categories/{id}', [PortofolioCategoryController::class, 'show']);
+Route::get('/portofolio-categories', [PortofolioCategoryController::class, 'index']);
+Route::get('/portofolio-categories/{id}', [PortofolioCategoryController::class, 'show']);
+
+Route::get('/portofolios', [PortofolioController::class, 'index']);
+Route::get('/portofolios/{id}', [PortofolioController::class, 'show']);
 
 Route::get('/positions', [PositionController::class, 'index']);
 Route::get('/positions/{id}', [PositionController::class, 'show']);
@@ -76,8 +79,8 @@ Route::middleware('auth:sanctum')->prefix('admin')->group(function () {
     Route::apiResource('clients', ClientController::class);
     Route::apiResource('microdata-options', MicrodataOptionController::class);
     Route::apiResource('partnerships', PartnershipController::class);
-    Route::apiResource('Portofolio-categories', PortofolioCategoryController::class);
-    Route::apiResource('Portofolios', PortofolioController::class);
+    Route::apiResource('portofolio-categories', PortofolioCategoryController::class);
+    Route::apiResource('portofolios', PortofolioController::class);
     Route::apiResource('positions', PositionController::class);
     Route::apiResource('process', ProcessController::class);
     Route::apiResource('services', ServiceController::class);

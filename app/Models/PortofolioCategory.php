@@ -15,6 +15,6 @@ class PortofolioCategory extends Model
 
     public function portofolios()
     {
-        return $this->hasMany(Portofolio::class);
+        return $this->hasMany(Portofolio::class, 'category_id');
     }
 }

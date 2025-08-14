@@ -8,17 +8,17 @@ class Portofolio extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+   protected $fillable = [
         'title',
         'name_project',
-        'image_portofolio',
-        'company_name',
         'category_id',
+        'company_name',
+        'image_portofolio'
     ];
 
-     public function category()
+    public function category()
     {
-        return $this->belongsTo(PortofolioCategory::class, 'portfolio_category_id');
+        return $this->belongsTo(PortofolioCategory::class, 'category_id');
     }
 }
 // tambahkan link project

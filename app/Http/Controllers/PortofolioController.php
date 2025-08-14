@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorePortfolioRequest;
 use App\Http\Requests\StorePortofolioRequest;
-use App\Http\Requests\UpdatePortfolioRequest;
 use App\Http\Requests\UpdatePortofolioRequest;
-use App\Models\Portfolio;
 use App\Models\Portofolio;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
@@ -21,17 +18,18 @@ class PortofolioController extends Controller
     {
         try {
             $portfolios = Portofolio::with('category')
-                ->orderBy('created_at', 'desc')
-                ->get();
+                ->latest()
+                ->get()
+                ->map(function ($portfolio) {
+                    $portfolio->image_portofolio_url = $portfolio->image_portofolio
+                        ? asset('storage/' . $portfolio->image_portofolio)
+                        : null;
+                    return $portfolio;
+                });
 
-            $portfolios->transform(function ($portfolio) {
-                $portfolio->image_portfolio_url = $portfolio->image_portofolio ? asset('storage/' . $portfolio->image_portofolio) : null;
-                return $portfolio;
-            });
-
-            return $this->successResponse($portfolios);
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage());
+            return $this->successResponse($portfolios, 'Portfolios retrieved successfully.', 200);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e->getMessage(), 500);
         }
     }
 
@@ -42,15 +40,23 @@ class PortofolioController extends Controller
                 $validated = $request->validated();
 
                 if ($request->hasFile('image_portofolio')) {
-                    $validated['image_portofolio'] = $request->file('image_portofolio')->store('portfolio_images', 'public');
+                    $validated['image_portofolio'] = $request->file('image_portofolio')
+                        ->store('portfolio_images', 'public');
                 }
 
-                return Portofolio::create($validated);
+                $portfolio = Portofolio::create($validated);
+
+                $portfolio->load('category');
+                $portfolio->image_portofolio_url = $portfolio->image_portofolio
+                    ? asset('storage/' . $portfolio->image_portofolio)
+                    : null;
+
+                return $portfolio;
             });
 
             return $this->successResponse($newPortfolio, 'Portfolio created successfully.', 201);
-        } catch (\Exception $e) {
-            return $this->errorResponse('Failed to create portfolio.', 500);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e->getMessage(), 500);
         }
     }
 
@@ -58,55 +64,64 @@ class PortofolioController extends Controller
     {
         try {
             $portfolio = Portofolio::with('category')->findOrFail($id);
-            $portfolio->image_portfolio_url = $portfolio->image_portofolio ? asset('storage/' . $portfolio->image_portofolio) : null;
+            $portfolio->image_portofolio_url = $portfolio->image_portofolio
+                ? asset('storage/' . $portfolio->image_portofolio)
+                : null;
 
-            return $this->successResponse($portfolio, 'Portfolio retrieved successfully.');
-        } catch (\Exception $e) {
-            return $this->errorResponse('Portfolio not found.', 404);
+            return $this->successResponse($portfolio);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e->getMessage(), 404);
         }
     }
 
-    public function update(UpdatePortofolioRequest $request, Portofolio $portfolio): JsonResponse
+    public function update(UpdatePortofolioRequest $request, $id): JsonResponse
     {
         try {
-            $updatedPortfolio = DB::transaction(function () use ($request, $portfolio) {
+            $updatedPortfolio = DB::transaction(function () use ($request, $id) {
                 $validated = $request->validated();
+
+                $portfolio = Portofolio::findOrFail($id);
 
                 if ($request->hasFile('image_portofolio')) {
                     if ($portfolio->image_portofolio && Storage::disk('public')->exists($portfolio->image_portofolio)) {
                         Storage::disk('public')->delete($portfolio->image_portofolio);
                     }
-                    $validated['image_portofolio'] = $request->file('image_portofolio')->store('portfolio_images', 'public');
-                } else {
-                    unset($validated['image']);
+                    $validated['image_portofolio'] = $request->file('image_portofolio')
+                        ->store('portfolio_images', 'public');
                 }
 
                 $portfolio->update($validated);
+
+                $portfolio->load('category');
+                $portfolio->image_portofolio_url = $portfolio->image_portofolio
+                    ? asset('storage/' . $portfolio->image_portofolio)
+                    : null;
+
                 return $portfolio;
             });
 
-            return $this->successResponse($updatedPortfolio, 'Portfolio updated successfully.');
-        } catch (\Exception $e) {
-            return $this->errorResponse('Failed to update portfolio.', 500);
+            return $this->successResponse($updatedPortfolio, 'Portfolio updated successfully.', 200);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e->getMessage(), 500);
         }
     }
 
-    public function destroy(Portofolio $portfolio): JsonResponse
+    public function destroy($id): JsonResponse
     {
         try {
-            DB::transaction(function () use ($portfolio) {
-                if ($portfolio->image && Storage::disk('public')->exists($portfolio->image)) {
-                    Storage::disk('public')->delete($portfolio->image);
-                }
+            DB::transaction(function () use ($id) {
+                $portfolio = Portofolio::findOrFail($id);
+
                 if ($portfolio->image_portofolio && Storage::disk('public')->exists($portfolio->image_portofolio)) {
                     Storage::disk('public')->delete($portfolio->image_portofolio);
                 }
+
                 $portfolio->delete();
             });
 
-            return $this->successResponse(null, 'Portfolio deleted successfully.', 204);
-        } catch (\Exception $e) {
-            return $this->errorResponse('Failed to delete portfolio.', 500);
+            return $this->successResponse(null, 'Portfolio deleted successfully.', 200);
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e->getMessage(), 500);
         }
     }
 }

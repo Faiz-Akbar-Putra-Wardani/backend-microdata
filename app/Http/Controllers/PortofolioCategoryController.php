@@ -18,15 +18,14 @@ class PortofolioCategoryController extends Controller
      * Display a listing of the resource.
      */
     public function index(): JsonResponse
-    {
-        try {
-            $categories = PortofolioCategory::orderByDesc('created_at')->get();
-            return $this->successResponse($categories);
-        } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), 500);
-        }
+{
+    try {
+        $categories = PortofolioCategory::select('id', 'name')->orderByDesc('created_at')->get();
+        return $this->successResponse($categories, 'Categories retrieved successfully.');
+    } catch (\Exception $e) {
+        return $this->errorResponse($e->getMessage(), 500);
     }
-
+}
     /**
      * Store a newly created resource in storage.
      */

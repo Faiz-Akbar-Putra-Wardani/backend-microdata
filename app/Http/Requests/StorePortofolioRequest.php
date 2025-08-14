@@ -26,11 +26,10 @@ class StorePortofolioRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'name_project' => 'required|string|max:255',
-            'description' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'image_portofolio' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'company_name' => 'required|string|max:255',
-            'category_id' => 'required|exists:portfolio_categories,id',
+            'category_id' => 'required|exists:portofolio_categories,id',
+
         ];
     }
 
@@ -39,12 +38,6 @@ class StorePortofolioRequest extends FormRequest
         return [
             'title.required' => 'The title field is required.',
             'name_project.required' => 'The project name field is required.',
-            'description.required' => 'The description field is required.',
-
-            'image.required' => 'The image field is required.',
-            'image.image' => 'The image must be an image.',
-            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg.',
-            'image.max' => 'The image size may not be greater than 2MB.',
 
             'image_portofolio.required' => 'The portfolio image field is required.',
             'image_portofolio.image' => 'The portfolio image must be an image.',
