@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 class ServiceLandingPageController extends Controller
 {
     Use ApiResponse;
-    public function index(): JsonResponse   
+    public function index(): JsonResponse
     {
         try {
             $serviceLandingPage = ServiceLandingPage::orderByDesc('created_at', 'desc')->get();
@@ -71,25 +71,37 @@ class ServiceLandingPageController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatedServiceLandingPageRequest $request, ServiceLandingPage $serviceLandingPage)
+    public function update(UpdatedServiceLandingPageRequest $request, $id): JsonResponse
     {
         try {
-            $updatedServiceLandingPage = DB::transaction(function () use ($request, $serviceLandingPage) {
+            $updatedServiceLandingPage = DB::transaction(function () use ($request, $id) {
                 $validated = $request->validated();
+
+                $serviceLandingPage = ServiceLandingPage::findOrFail($id);
                 $serviceLandingPage->update($validated);
+
                 return $serviceLandingPage;
             });
+
             return $this->successResponse($updatedServiceLandingPage, 'Service Landing Page updated successfully.', 200);
         } catch (\Exception $e) {
-            return $this->errorResponse('Failed to update Service Landing Page.', 500);
+            return $this->errorResponse('Failed to update Service Landing Page: ' . $e->getMessage(), 500);
+        }
+   }
+
+    public function destroy($id): JsonResponse
+    {
+        try {
+            $deleted = DB::transaction(function () use ($id) {
+
+                $serviceLandingPage = ServiceLandingPage::findOrFail($id);
+                return $serviceLandingPage->delete();
+            });
+
+            return $this->successResponse($id, 'Service Landing Page deleted successfully.', 200);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to delete Service Landing Page: ' . $e->getMessage(), 500);
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ServiceLandingPage $serviceLandingPage)
-    {
-        
-    }
 }
