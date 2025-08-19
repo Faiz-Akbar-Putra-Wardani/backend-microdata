@@ -24,16 +24,16 @@ class StorePositionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
+            'title' => 'nullable|string',
             'position' => 'required|string|max:255',
             'description' => 'required|string',
         ];
     }
 
-    public function messages(): array 
+    public function messages(): array
     {
         return [
-           'title.required' => 'The title field is required.',
+        //    'title.required' => 'The title field is required.',
            'position.required' => 'The title position is required.',
            'description.required' => 'The description is required.',
         ];
@@ -49,5 +49,5 @@ class StorePositionRequest extends FormRequest
             ], 422)
         );
     }
-    
+
 }

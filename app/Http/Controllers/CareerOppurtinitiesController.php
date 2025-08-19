@@ -20,6 +20,9 @@ class CareerOppurtinitiesController extends Controller
             $careerOpportunities = CareerOppurtinities::orderByDesc('created_at', 'desc')->get();
             $careerOpportunities->transform(function ($opportunity) {
                 $opportunity->image_url = $opportunity->image ? asset('storage/' . $opportunity->image) : null;
+
+                $opportunity->requirements = preg_split("/\r\n|\n|\r/", $opportunity->requirements);
+
                 return $opportunity;
             });
 
@@ -28,6 +31,7 @@ class CareerOppurtinitiesController extends Controller
             return $this->errorResponse('Failed to retrieve career opportunities.', 500);
         }
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -67,11 +71,15 @@ class CareerOppurtinitiesController extends Controller
         try {
             $careerOpportunity = CareerOppurtinities::findOrFail($id);
             $careerOpportunity->image_url = $careerOpportunity->image ? asset('storage/' . $careerOpportunity->image) : null;
+
+            $careerOpportunity->requirements = preg_split("/\r\n|\n|\r/", $careerOpportunity->requirements);
+
             return $this->successResponse($careerOpportunity);
         } catch (\Exception $e) {
             return $this->errorResponse('Career opportunity not found.', 404);
         }
     }
+
 
     /**
      * Show the form for editing the specified resource.

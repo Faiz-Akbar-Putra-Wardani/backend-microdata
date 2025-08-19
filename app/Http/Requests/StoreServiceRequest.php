@@ -25,7 +25,7 @@ class StoreServiceRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'icon' => 'required|image|mimes:jpeg,png,jpg',
+            'icon' => 'required|image|mimes:jpeg,png,jpg|max:5120',
             'description' => 'required|string',
         ];
     }
@@ -37,6 +37,7 @@ class StoreServiceRequest extends FormRequest
             'icon.required' => 'The icon field is required.',
             'icon.image' => 'The icon must be an image.',
             'icon.mimes' => 'The icon must be a file of type: jpeg, png, jpg.',
+            'icon.max' => 'The icon size may not be greater than 5MB.',
             'description.required' => 'The description field is required.',
         ];
     }
