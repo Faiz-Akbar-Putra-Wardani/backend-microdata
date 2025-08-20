@@ -24,7 +24,6 @@ class UpdatedServiceLandingPageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'sometimes|string|max:255',
             'name_service' => 'sometimes|string|max:255',
             'description' => 'sometimes|string',
         ];
@@ -33,7 +32,6 @@ class UpdatedServiceLandingPageRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.sometimes' => 'The title field is optional but must be a string if provided.',
             'name_service.sometimes' => 'The name_service field is optional but must be a string if provided.',
             'description.sometimes' => 'The description field is optional but must be a string if provided.',
         ];

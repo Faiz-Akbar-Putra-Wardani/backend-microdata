@@ -24,7 +24,6 @@ class StoreServiceLandingPageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
             'name_service' => 'required|string|max:255',
             'description' => 'required|string',
         ];
@@ -33,8 +32,6 @@ class StoreServiceLandingPageRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.string' => 'The title must be a string.',
-            'title.max' => 'The title may not be greater than 255 characters.',
             'name_service.string' => 'The name_service must be a string.',
             'name_service.max' => 'The name_service may not be greater than 255 characters.',
             'description.string' => 'The description must be a string.',

@@ -16,7 +16,7 @@ class ServiceLandingPageController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $serviceLandingPage = ServiceLandingPage::orderByDesc('created_at', 'desc')->get();
+            $serviceLandingPage = ServiceLandingPage::orderBy('created_at', 'asc')->get();
             return $this->successResponse($serviceLandingPage);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage());

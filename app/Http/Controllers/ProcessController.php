@@ -3,94 +3,82 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProcessRequest;
-use App\Http\Requests\UpdatedServiceRequest;
+use App\Http\Requests\UpdatedProcessRequest;
 use App\Models\Process;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ProcessController extends Controller
 {
-    Use ApiResponse;
+    use ApiResponse;
+
     public function index(): JsonResponse
     {
         try {
-            $Process = Process::orderByDesc('created_at', 'desc')->get();
-            $Process->transform(function ($process) {
+            $processes = Process::orderBy('created_at', 'asc')->get();
+            $processes->transform(function ($process) {
                 $process->icon_url = $process->icon ? asset('storage/' . $process->icon) : null;
                 return $process;
             });
 
-            return $this->successResponse($Process);
+            return $this->successResponse($processes);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage());
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        
+        //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreProcessRequest $request): JsonResponse
     {
         try {
-            $newProcess = DB::transaction(function () use ($request){
+            $newProcess = DB::transaction(function () use ($request) {
                 $validated = $request->validated();
 
                 if ($request->hasFile('icon')) {
                     $iconPath = $request->file('icon')->store('icons', 'public');
                     $validated['icon'] = $iconPath;
                 }
+
                 return Process::create($validated);
             });
-            return $this->successResponse($newProcess, 'Process created successfully.', 201);
-        } catch (\Exception $e){
-            return $this->errorResponse('Failed to create team.', 500);
+
+            return $this->successResponse($newProcess, 201);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to create Process.', 500);
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id): JsonResponse
     {
         try {
             $process = Process::findOrFail($id);
             $process->icon_url = $process->icon ? asset('storage/' . $process->icon) : null;
 
-         return $this->successResponse($process, 'Process retrieved successfully.');
+            return $this->successResponse($process);
         } catch (\Exception $e) {
-              return $this->errorResponse('Failed to retrieve process.', 500);
+            return $this->errorResponse('Process not found.', 404);
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Process $process)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatedServiceRequest $request, Process $process): JsonResponse
+    public function update(UpdatedProcessRequest $request, $id): JsonResponse
     {
         try {
-            $updatedProcess = DB::transaction(function () use ($request, $process){
+            $updatedProcess = DB::transaction(function () use ($request, $id) {
                 $validated = $request->validated();
+                $process = Process::findOrFail($id);
 
-               if ($request->hasFile('icon')) {
+                if ($request->hasFile('icon')) {
                     if ($process->icon && Storage::disk('public')->exists($process->icon)) {
                         Storage::disk('public')->delete($process->icon);
                     }
@@ -102,26 +90,26 @@ class ProcessController extends Controller
                 }
 
                 $process->update($validated);
-                return $process->fresh();
+                return $process;
             });
-            return $this->successResponse($process, 'Process updated successfully.', 200);
-        } catch(\Exception $e) {
-            return $this->errorResponse('Failed to updated process', 500);
+
+            return $this->successResponse($updatedProcess, 'Process updated successfully.', 200);
+        } catch (\Exception $e) {
+            return $this->errorResponse('Failed to update Process: ' . $e->getMessage(), 500);
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Process $process): JsonResponse
+    public function destroy($id): JsonResponse
     {
         try {
-            DB::transaction(function () use ($process){
-                $process->delete();
+            $deleted = DB::transaction(function () use ($id) {
+                $process = Process::findOrFail($id);
+                return $process->delete();
             });
-            return $this->successResponse($process, 'Process deleted successfully.', 200);
+
+            return $this->successResponse($id, 'Process deleted successfully.', 200);
         } catch (\Exception $e) {
-             return $this->errorResponse('Failed tp deleted Process.', 500);
+            return $this->errorResponse('Failed to delete Process: ' . $e->getMessage(), 500);
         }
     }
 }
