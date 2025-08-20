@@ -24,7 +24,6 @@ class StorePositionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'nullable|string',
             'position' => 'required|string|max:255',
             'description' => 'required|string',
         ];

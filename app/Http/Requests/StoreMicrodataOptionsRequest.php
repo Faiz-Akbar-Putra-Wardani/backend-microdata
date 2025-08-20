@@ -24,7 +24,6 @@ class StoreMicrodataOptionsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
             'name_title' => 'required|string|max:255',
             'description' => 'required|string',
         ];
@@ -33,13 +32,11 @@ class StoreMicrodataOptionsRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.required' => 'The title field is required.',
+
             'name_title.required' => 'The name title field is required.',
             'description.required' => 'The description field is required.',
-            'title.string' => 'The title must be a string.',
             'name_title.string' => 'The name title must be a string.',
             'description.string' => 'The description must be a string.',
-            'title.max' => 'The title may not be greater than 255 characters.',
             'name_title.max' => 'The name title may not be greater than 255 characters.',
         ];
     }

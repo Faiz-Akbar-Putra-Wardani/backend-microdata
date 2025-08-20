@@ -24,7 +24,6 @@ class UpdatedMicrodataOptionsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'sometimes|string|max:255',
             'name_title' => 'sometimes|string|max:255',
             'description' => 'sometimes|string',
         ];
@@ -33,10 +32,8 @@ class UpdatedMicrodataOptionsRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.sometimes' => 'The title field is optional but must be a string if provided.',
             'name_title.sometimes' => 'The name title field is optional but must be a string if provided.',
             'description.sometimes' => 'The description field is optional but must be a string if provided.',
-            'title.max' => 'The title may not be greater than 255 characters.',
             'name_title.max' => 'The name title may not be greater than 255 characters.',
         ];
     }

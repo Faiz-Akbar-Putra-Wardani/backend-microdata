@@ -24,7 +24,6 @@ class UpdatedPositionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'sometimes|string',
             'position' => 'sometimes|string|max:255',
             'description' => 'sometimes|string',
         ];
@@ -33,7 +32,6 @@ class UpdatedPositionRequest extends FormRequest
     public function messages()
     {
         return [
-            'title.string' => 'The title must be a string.',
             'position.string' => 'The position must be a string.',
             'position.max' => 'The position may not be greater than 255 characters.',
             'description.string' => 'The description must be a string.',
