@@ -25,6 +25,7 @@ class StorePartnershipRequest extends FormRequest
     {
         return [
             'logo' => 'required|image|mimes:jpeg,png,jpg',
+            'name' => 'required|string|max:255',
         ];
     }
 
@@ -34,6 +35,9 @@ class StorePartnershipRequest extends FormRequest
             'logo.required' => 'Logo is required.',
             'logo.image' => 'Logo must be an image.',
             'logo.mimes' => 'Logo must be a JPEG, PNG, or JPG image.',
+            'name.required' => 'Name is required.',
+            'name.string' => 'Name must be a string.',
+            'name.max' => 'Name must not exceed 255 characters.',
         ];
     }
 

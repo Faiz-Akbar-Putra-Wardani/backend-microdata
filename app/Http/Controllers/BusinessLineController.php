@@ -18,7 +18,7 @@ class BusinessLineController extends Controller
     public function index() : JsonResponse
     {
         try {
-            $businessLines = BusinessLine::orderByDesc('created_at')->get();
+            $businessLines = BusinessLine::orderBy('created_at', 'asc')->get();
             $businessLines->transform(function ($businessLine) {
             $businessLine->icon_url = $businessLine->icon ? asset('storage/' . $businessLine->icon) : null;
                 return $businessLine;
@@ -72,8 +72,8 @@ class BusinessLineController extends Controller
             return $this->errorResponse('Business line not found.', 404);
         }
     }
-    
-    
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -110,7 +110,7 @@ class BusinessLineController extends Controller
             return $this->errorResponse('Failed to update business line.', 500);
         }
     }
-   
+
 
     /**
      * Remove the specified resource from storage.

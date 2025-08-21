@@ -25,6 +25,7 @@ class UpdatedPartnershipRequest extends FormRequest
     {
         return [
             'logo' => 'sometimes|image|mimes:jpeg,png,jpg',
+            'name' => 'sometimes|string|max:255',
         ];
     }
 
@@ -33,6 +34,9 @@ class UpdatedPartnershipRequest extends FormRequest
         return [
             'logo.image' => 'Logo must be an image.',
             'logo.mimes' => 'Logo must be a JPEG, PNG, or JPG image.',
+            'name.string' => 'Name must be a string.',
+            'name.max' => 'Name must not exceed 255 characters.',
+            'name.required' => 'Name is required.',
         ];
     }
 

@@ -24,7 +24,6 @@ class UpdatedBusinessLineRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'sometimes|string|max:255',
             'icon' => 'sometimes|image|mimes:jpeg,png,jpg',
             'title_business' => 'sometimes|string|max:255',
             'description' => 'sometimes|string',
@@ -34,7 +33,6 @@ class UpdatedBusinessLineRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.sometimes' => 'The title must be a string.',
             'icon.sometimes' => 'The icon must be an image if provided.',
             'icon.image' => 'The icon must be an image.',
             'icon.mimes' => 'The icon must be a file of type: jpeg, png, jpg.',

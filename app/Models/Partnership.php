@@ -11,5 +11,6 @@ class Partnership extends Model
 
     protected $fillable = [
         'logo',
+        'name',
     ];
 }

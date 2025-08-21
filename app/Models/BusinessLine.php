@@ -10,7 +10,6 @@ class BusinessLine extends Model
     Use HasFactory;
 
     protected $fillable = [
-        'title',
         'icon',
         'title_business',
         'description',
