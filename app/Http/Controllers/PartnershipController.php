@@ -18,7 +18,7 @@ class PartnershipController extends Controller
     public function index(): JsonResponse
     {
          try {
-            $partnerships = Partnership::orderBy('created_at', 'desc')->get();
+            $partnerships = Partnership::orderBy('created_at', 'asc')->get();
             $partnerships->transform(function ($partnerships) {
             $partnerships->logo_url = $partnerships->logo ? asset('storage/' . $partnerships->logo) : null;
                 return $partnerships;
@@ -117,5 +117,5 @@ class PartnershipController extends Controller
             return $this->errorResponse('Failed to delete partnership.', 500);
             }
     }
-    
+
 }

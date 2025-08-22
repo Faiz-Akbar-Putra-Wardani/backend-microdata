@@ -18,7 +18,7 @@ class ServiceController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $services = Service::orderBy('created_at', 'desc')->get();
+            $services = Service::orderBy('created_at', 'asc')->get();
              $services->transform(function ($service) {
                 $service->icon_url = $service->icon ? asset('storage/' . $service->icon) : null;
                 return $service;
@@ -34,7 +34,7 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -98,12 +98,12 @@ class ServiceController extends Controller
                 $iconPath = $request->file('icon')->store('icons', 'public');
                 $validated['icon'] = $iconPath;
             } else {
-                unset($validated['icon']); 
+                unset($validated['icon']);
             }
 
             $service->update($validated);
 
-            return $service->fresh(); 
+            return $service->fresh();
         });
 
         return $this->successResponse($updatedService, 'Service updated successfully.', 200);
@@ -130,5 +130,5 @@ class ServiceController extends Controller
            return $this->errorResponse('Failed to delete service.', 500);
        }
    }
-   
+
 }

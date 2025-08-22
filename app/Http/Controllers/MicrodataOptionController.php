@@ -16,7 +16,7 @@ class MicrodataOptionController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $microdataOptions = MicrodataOption::orderByDesc('created_at', 'desc')->get();
+            $microdataOptions = MicrodataOption::orderBy('created_at', 'asc')->get();
             return $this->successResponse($microdataOptions);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage());
@@ -28,7 +28,7 @@ class MicrodataOptionController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**

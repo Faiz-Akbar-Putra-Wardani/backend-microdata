@@ -17,15 +17,15 @@ class TechnologyController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $technologies = Technology::orderBy('created_at', 'desc')->get();
+            $technologies = Technology::orderBy('created_at', 'asc')->get();
 
             $technologies->transform(function ($technologies) {
             $technologies->image_url = $technologies->image ? asset('storage/' . $technologies->image) : null;
 
                 return $technologies;
             });
-            
-            
+
+
             return $this->successResponse($technologies, 'Technologies retrieved successfully.', 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve technologies.', 500);
@@ -38,7 +38,7 @@ class TechnologyController extends Controller
             $newTechnologies = DB::transaction(function () use($request){
                 $validated = $request->validated();
 
-                
+
                 if ($request->hasFile('image')) {
                     $imagePath = $request->file('image')->store('images', 'public');
                     $validated['image'] = $imagePath;
@@ -70,7 +70,7 @@ class TechnologyController extends Controller
                 $validated = $request->validated();
 
                 if ($request->hasFile('image')) {
-                   
+
                     if ($technology->image && Storage::disk('public')->exists($technology->image)) {
                         Storage::disk('public')->delete($technology->image);
                     }

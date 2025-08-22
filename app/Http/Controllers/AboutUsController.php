@@ -17,13 +17,13 @@ class AboutUsController extends Controller
     public function index() : JsonResponse
     {
         try {
-            $aboutUs = AboutUs::orderByDesc('created_at', 'desc')->get();
+            $aboutUs = AboutUs::orderBy('created_at', 'asc')->get();
             return $this->successResponse($aboutUs);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage());
         }
     }
-    
+
 
     /**
      * Show the form for creating a new resource.
@@ -62,7 +62,7 @@ class AboutUsController extends Controller
         } catch (\Exception $e) {
             return $this->errorResponse('About Us not found.', 404);
         }
-        
+
     }
 
     /**
@@ -81,7 +81,7 @@ class AboutUsController extends Controller
     try {
         $updatedAboutUs = DB::transaction(function () use ($request, $id) {
             $validated = $request->validated();
-            $aboutUs = AboutUs::findOrFail($id); 
+            $aboutUs = AboutUs::findOrFail($id);
             $aboutUs->update($validated);
             return $aboutUs;
         });

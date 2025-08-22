@@ -17,7 +17,7 @@ class CareerOppurtinitiesController extends Controller
     public function index()
     {
         try {
-            $careerOpportunities = CareerOppurtinities::orderByDesc('created_at', 'desc')->get();
+            $careerOpportunities = CareerOppurtinities::orderBy('created_at', 'asc')->get();
             $careerOpportunities->transform(function ($opportunity) {
                 $opportunity->image_url = $opportunity->image ? asset('storage/' . $opportunity->image) : null;
 

@@ -19,7 +19,7 @@ class TeamController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $teams = Team::orderBy('created_at', 'desc')->get();
+            $teams = Team::orderBy('created_at', 'asc')->get();
 
             $teams->transform(function ($team) {
                 $team->photo_url = $team->photo ? asset('storage/' . $team->photo) : null;

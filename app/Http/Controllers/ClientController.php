@@ -16,7 +16,7 @@ class ClientController extends Controller
     public function index() : JsonResponse
     {
         try {
-            $clients = Client::orderByDesc('created_at', 'desc')->get();
+            $clients = Client::orderBy('created_at', 'asc')->get();
             return $this->successResponse($clients);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage());

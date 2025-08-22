@@ -16,7 +16,7 @@ class PositionController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $positions = Position::orderByDesc('created_at', 'desc')->get();
+            $positions = Position::orderBy('created_at', 'asc')->get();
             return $this->successResponse($positions);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage());

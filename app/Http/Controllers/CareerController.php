@@ -18,7 +18,7 @@ class CareerController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $careers = Career::orderBy('created_at', 'desc')->get();
+            $careers = Career::orderBy('created_at', 'asc')->get();
 
             $careers->transform(function ($career) {
                 $career->image_url = $career->image ? asset('storage/' . $career->image) : null;
@@ -69,7 +69,7 @@ class CareerController extends Controller
         try {
             $career = Career::findOrFail($id);
             $career->image_url = $career->image ? asset('storage/' . $career->image) : null;
-            
+
             return $this->successResponse($career, 'Career retrieved successfully.', 200);
         } catch (\Exception $e) {
             return $this->errorResponse('Failed to retrieve career.', 500);
