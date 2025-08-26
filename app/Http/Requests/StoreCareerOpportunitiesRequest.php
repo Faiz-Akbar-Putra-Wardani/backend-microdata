@@ -25,20 +25,16 @@ class StoreCareerOpportunitiesRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg',
             'description' => 'required|string',
             'requirements' => 'required|string',
         ];
-        
+
     }
 
     public function messages(): array
     {
         return [
             'title.required' => 'The title field is required.',
-            'image.required' => 'The image field is required.',
-            'image.image' => 'The image must be a valid image file.',
-            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg.',
             'description.required' => 'The description field is required.',
             'requirements.required' => 'The requirements field is required.',
         ];

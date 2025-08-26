@@ -50,10 +50,6 @@ class CareerOppurtinitiesController extends Controller
             $newCareerOpportunity = DB::transaction(function () use ($request) {
                 $validated = $request->validated();
 
-                if ($request->hasFile('image')) {
-                    $imagePath = $request->file('image')->store('images', 'public');
-                    $validated['image'] = $imagePath;
-                }
                 return CareerOppurtinities::create($validated);
             });
 
@@ -99,16 +95,6 @@ class CareerOppurtinitiesController extends Controller
 
         $updatedCareerOpportunity = DB::transaction(function () use ($request, $careerOpportunity) {
             $validated = $request->validated();
-
-            if ($request->hasFile('image')) {
-                if ($careerOpportunity->image && Storage::disk('public')->exists($careerOpportunity->image)) {
-                    Storage::disk('public')->delete($careerOpportunity->image);
-                }
-                $imagePath = $request->file('image')->store('images', 'public');
-                $validated['image'] = $imagePath;
-            } else {
-                unset($validated['image']);
-            }
 
             $careerOpportunity->update($validated);
             return $careerOpportunity;

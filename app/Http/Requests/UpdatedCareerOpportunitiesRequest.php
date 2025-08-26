@@ -25,7 +25,6 @@ class UpdatedCareerOpportunitiesRequest extends FormRequest
     {
         return [
             'title' => 'sometimes|string|max:255',
-            'image' => 'sometimes|image|mimes:jpeg,png,jpg',
             'description' => 'sometimes|string',
             'requirements' => 'sometimes|string',
         ];
@@ -35,8 +34,6 @@ class UpdatedCareerOpportunitiesRequest extends FormRequest
     {
         return [
             'title.sometimes' => 'The title field is optional but must be a string if provided.',
-            'image.sometimes' => 'The image field is optional but must be a valid image file if provided.',
-            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg.',
             'description.sometimes' => 'The description field is optional but must be a string if provided.',
             'requirements.sometimes' => 'The requirements field is optional but must be a string if provided.',
         ];
